@@ -213,7 +213,7 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
                         <div className="flex items-center gap-4">
                             {/* Barcode decoration */}
                             <div className="flex gap-[2px] h-8">
-                                {[3, 1, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1].map((w, i) => (
+                                {[2,3,2,8,0,9,0,1,0,2,0,6].map((w, i) => (
                                     <div key={i} className="bg-foreground h-full" style={{ width: `${w * 2}px` }} />
                                 ))}
                             </div>
