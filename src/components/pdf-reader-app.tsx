@@ -13,6 +13,19 @@ function useMediaQuery(query: string) {
     const [matches, setMatches] = useState(false);
 
     useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "i") {
+                e.preventDefault();
+                // Dispatch a custom event that PdfReaderApp can listen to
+                window.dispatchEvent(new CustomEvent("toggle-reading-timer"));
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
+
+    useEffect(() => {
         const media = window.matchMedia(query);
         if (media.matches !== matches) {
             setMatches(media.matches);
@@ -40,6 +53,16 @@ function PdfReaderAppContent() {
             setSidebarOpen(true);
         }
     }, [currentDocument]);
+
+    // Handle keyboard shortcut for pausing timer
+    useEffect(() => {
+        const handleToggleTimer = () => {
+            readingStats.togglePause();
+        };
+
+        window.addEventListener("toggle-reading-timer", handleToggleTimer);
+        return () => window.removeEventListener("toggle-reading-timer", handleToggleTimer);
+    }, [readingStats]);
 
     const sidebarVariants = {
         mobile: {

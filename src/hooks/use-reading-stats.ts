@@ -31,26 +31,28 @@ export function useReadingStats() {
     // Refs for tracking intervals without re-renders
     const lastPageParams = useRef({ page: 1, time: Date.now() });
 
-    // Helper: Adjust timestamps when resuming to ignore the paused duration
     const togglePause = () => {
+        const wasOpen = isOpen;
+        if (!isOpen) {
+            setIsOpen(true);
+        }
+
         if (isPaused) {
-            // RESUMING
+            // Unpause if paused
             if (pauseStartRef.current) {
                 const pauseDuration = Date.now() - pauseStartRef.current;
-
-                // Shift the session start time forward by the pause duration
-                // So (Now - StartTime) will effectively exclude the pause
                 setStartTime(prev => prev + pauseDuration);
-
-                // Shift the current page's start time forward too
                 lastPageParams.current.time += pauseDuration;
             }
             pauseStartRef.current = null;
             setIsPaused(false);
         } else {
-            // PAUSING
-            pauseStartRef.current = Date.now();
-            setIsPaused(true);
+            // If it was already open and running, then we pause.
+            // If it was closed, we just opened it and kept it running.
+            if (wasOpen) {
+                pauseStartRef.current = Date.now();
+                setIsPaused(true);
+            }
         }
     };
 
