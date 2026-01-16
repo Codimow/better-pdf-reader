@@ -127,6 +127,37 @@ export function useReadingStats() {
         return Date.now() - lastPageParams.current.time;
     };
 
+    // Idle Watchdog: Auto-pause after 2 minutes of inactivity
+    useEffect(() => {
+        if (isPaused) return;
+
+        let idleTimer: NodeJS.Timeout;
+        const IDLE_TIMEOUT = 120000; // 2 minutes
+
+        const resetIdleTimer = () => {
+            clearTimeout(idleTimer);
+            if (!isPaused) {
+                idleTimer = setTimeout(() => {
+                    // Auto-pause
+                    console.log("Auto-pausing due to inactivity");
+                    togglePause(); // Use the existing toggle which handles strict logic
+                }, IDLE_TIMEOUT);
+            }
+        };
+
+        // Listen for user activity
+        const events = ["mousedown", "mousemove", "keydown", "scroll", "touchstart"];
+        const handleActivity = () => resetIdleTimer();
+
+        events.forEach(event => window.addEventListener(event, handleActivity));
+        resetIdleTimer(); // Start timer
+
+        return () => {
+            clearTimeout(idleTimer);
+            events.forEach(event => window.removeEventListener(event, handleActivity));
+        };
+    }, [isPaused]); // Re-bind when pause state changes
+
     // Calculate derived stats
     const totalPagesRead = new Set(history.map(h => h.page)).size;
     const totalRecordedTime = history.reduce((acc, curr) => acc + curr.duration, 0);
