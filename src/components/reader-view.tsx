@@ -307,68 +307,82 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
                                 </div>
                             </div>
 
-                            {/* Bottom Row - Split into Details and Square Image */}
+                            {/* Bottom Row - 3 Equal Square Blocks (4 cols each) */}
+                            <div className="col-span-1 md:col-span-12 grid grid-cols-1 md:grid-cols-12 bg-background border-t border-border">
 
-                            {/* Left Side - Details & Socials (8 Cols) */}
-                            <div className="col-span-1 md:col-span-12 lg:col-span-8 flex flex-col justify-between bg-background p-8 border-t border-border">
-                                <div className="max-w-md">
-                                    <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-mono mb-4">
-                                        The Poetics of Space
+                                {/* Block 1: Details (4 Cols) */}
+                                <div className="col-span-1 md:col-span-4 aspect-square p-8 flex flex-col justify-between bg-background border-r border-border">
+                                    <div>
+                                        <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-mono mb-6">
+                                            The Poetics of Space
+                                        </div>
+                                        <h3 className="text-3xl font-bold tracking-tight mb-4 leading-tight">
+                                            A Digital<br />Sanctuary
+                                        </h3>
                                     </div>
-                                    <h3 className="text-2xl font-bold tracking-tight mb-4">
-                                        A Digital Sanctuary
-                                    </h3>
                                     <div className="text-sm text-muted-foreground font-mono leading-relaxed">
                                         Designed for those who view reading not just as consumption, but as an act of habitation.
-                                        Organized. Minimal. Entirely yours.
                                     </div>
                                 </div>
 
-                                {/* Social Share Buttons - Horizontal Row */}
-                                <div className="flex gap-4 mt-8">
+                                {/* Block 2: Social Grid (4 Cols) - 2x2 Boxy Grid */}
+                                <div className="col-span-1 md:col-span-4 aspect-square bg-border gap-px grid grid-cols-2 grid-rows-2 border-r border-border">
                                     <a
                                         href="https://github.com/kiritocode1/better-pdf-reader"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="h-12 px-6 flex items-center gap-3 bg-foreground/5 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors border border-transparent hover:border-border"
+                                        className="bg-background hover:bg-red-600 hover:text-white flex flex-col items-center justify-center gap-2 group transition-colors"
                                         title="GitHub"
                                     >
-                                        <HugeiconsIcon icon={Github01Icon} size={18} />
-                                        <span className="text-xs font-bold tracking-wider uppercase">GitHub</span>
+                                        <HugeiconsIcon icon={Github01Icon} size={32} className="group-hover:scale-110 transition-transform" />
+                                        <span className="text-[10px] uppercase tracking-widest font-mono">GitHub</span>
                                     </a>
                                     <button
                                         onClick={() => {
                                             const text = "Check out Better PDF Reader by @kiritocode1";
                                             window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
                                         }}
-                                        className="h-12 w-12 flex items-center justify-center bg-foreground/5 hover:bg-[#1DA1F2] hover:text-white transition-colors"
+                                        className="bg-background hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black flex flex-col items-center justify-center gap-2 group transition-colors"
                                         title="Share on X"
                                     >
-                                        <HugeiconsIcon icon={NewTwitterIcon} size={18} />
+                                        <HugeiconsIcon icon={NewTwitterIcon} size={32} className="group-hover:scale-110 transition-transform" />
+                                        <span className="text-[10px] uppercase tracking-widest font-mono">Share on X</span>
                                     </button>
                                     <button
                                         onClick={() => {
                                             window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
                                         }}
-                                        className="h-12 w-12 flex items-center justify-center bg-foreground/5 hover:bg-[#0077b5] hover:text-white transition-colors"
+                                        className="bg-background hover:bg-[#0077b5] hover:text-white flex flex-col items-center justify-center gap-2 group transition-colors"
                                         title="Share on LinkedIn"
                                     >
-                                        <HugeiconsIcon icon={Linkedin02Icon} size={18} />
+                                        <HugeiconsIcon icon={Linkedin02Icon} size={32} className="group-hover:scale-110 transition-transform" />
+                                        <span className="text-[10px] uppercase tracking-widest font-mono">LinkedIn</span>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(window.location.href);
+                                            // Optional: You could trigger a toast here if available, but keeping it simple for now
+                                        }}
+                                        className="bg-background hover:bg-emerald-600 hover:text-white flex flex-col items-center justify-center gap-2 group transition-colors"
+                                        title="Copy Link"
+                                    >
+                                        <HugeiconsIcon icon={Share01Icon} size={32} className="group-hover:scale-110 transition-transform" />
+                                        <span className="text-[10px] uppercase tracking-widest font-mono">Copy Link</span>
                                     </button>
                                 </div>
-                            </div>
 
-                            {/* Right Side - Square Image (4 Cols) */}
-                            <div className="col-span-1 md:col-span-12 lg:col-span-4 aspect-square bg-black relative group overflow-hidden border-t border-border">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                    src="/pixelated.png"
-                                    alt="Abstract visuals"
-                                    className="absolute inset-0 w-full h-full object-cover grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700 ease-in-out scale-105 group-hover:scale-100"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                                <div className="absolute bottom-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
-                                    <HugeiconsIcon icon={ArrowRight01Icon} size={24} className="text-white" />
+                                {/* Block 3: Square Image (4 Cols) */}
+                                <div className="col-span-1 md:col-span-4 aspect-square bg-black relative group overflow-hidden">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src="/pixelated.png"
+                                        alt="Abstract visuals"
+                                        className="w-full h-full object-cover grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700 ease-in-out scale-105 group-hover:scale-100"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                                    <div className="absolute bottom-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
+                                        <HugeiconsIcon icon={ArrowRight01Icon} size={24} className="text-white" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
