@@ -162,23 +162,23 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
         const peakMinutes = Math.max(...weeklyData);
 
         return (
-            <div className="flex-1 flex flex-col bg-black text-white relative overflow-hidden">
+            <div className="flex-1 flex flex-col bg-background text-foreground relative overflow-hidden transition-colors duration-300">
                 {/* Vertical Grid Lines Background */}
                 <div className="absolute inset-0 pointer-events-none">
                     {[...Array(12)].map((_, i) => (
                         <div
                             key={i}
-                            className="absolute top-0 bottom-0 w-px bg-white/[0.04]"
+                            className="absolute top-0 bottom-0 w-px bg-foreground/5 dark:bg-white/[0.04]"
                             style={{ left: `${((i + 1) / 13) * 100}%` }}
                         />
                     ))}
                 </div>
 
                 {/* Radial Clock Decoration */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.03]">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.03] dark:opacity-[0.03]">
                     <svg width="800" height="800" viewBox="0 0 800 800">
-                        <circle cx="400" cy="400" r="350" fill="none" stroke="white" strokeWidth="1" />
-                        <circle cx="400" cy="400" r="300" fill="none" stroke="white" strokeWidth="0.5" />
+                        <circle cx="400" cy="400" r="350" fill="none" stroke="currentColor" strokeWidth="1" />
+                        <circle cx="400" cy="400" r="300" fill="none" stroke="currentColor" strokeWidth="0.5" />
                         {/* Generate tick lines with rounded integer coordinates to avoid hydration mismatch */}
                         {[...Array(60)].map((_, i) => {
                             const angle = (i * 6 - 90) * (Math.PI / 180);
@@ -196,7 +196,7 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
                                     y1={y1}
                                     x2={x2}
                                     y2={y2}
-                                    stroke="white"
+                                    stroke="currentColor"
                                     strokeWidth={isMajor ? "2" : "0.5"}
                                 />
                             );
@@ -212,13 +212,13 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
                             {/* Barcode decoration */}
                             <div className="flex gap-[2px] h-8">
                                 {[3, 1, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1].map((w, i) => (
-                                    <div key={i} className="bg-white h-full" style={{ width: `${w * 2}px` }} />
+                                    <div key={i} className="bg-foreground h-full" style={{ width: `${w * 2}px` }} />
                                 ))}
                             </div>
                         </div>
-                        <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.2em] text-white/40">
+                        <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                             <span>Better PDF Reader</span>
-                            <span className="text-white/20">—</span>
+                            <span className="text-foreground/20">—</span>
                             <span>v1.0</span>
                         </div>
                     </header>
@@ -226,32 +226,32 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
                     {/* Compact Grid Layout */}
                     <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 p-4">
                         {/* Intro Card */}
-                        <div className="col-span-2 md:col-span-3 lg:col-span-2 bg-background border border-border p-2 hover:bg-white/10 transition-colors">
+                        <div className="col-span-2 md:col-span-3 lg:col-span-2 bg-background border border-border p-2 hover:bg-foreground/5 dark:hover:bg-white/10 transition-colors">
                             <h1 className="text-2xl font-bold tracking-tighter mb-2">Better PDF Reader</h1>
                             <p className="text-sm text-muted-foreground">Minimal reading with analytics. No distractions.</p>
                         </div>
                         {/* Total Time */}
-                        <div className="bg-background border border-border p-2 hover:bg-white/10 transition-colors">
+                        <div className="bg-background border border-border p-2 hover:bg-foreground/5 dark:hover:bg-white/10 transition-colors">
                             <div className="text-xs uppercase text-muted-foreground mb-1">Total Time</div>
                             <div className="text-lg font-bold">{formatLifetimeTime(totalTime)}</div>
                         </div>
                         {/* Pages Read */}
-                        <div className="bg-background border border-border p-2 hover:bg-white/10 transition-colors">
+                        <div className="bg-background border border-border p-2 hover:bg-foreground/5 dark:hover:bg-white/10 transition-colors">
                             <div className="text-xs uppercase text-muted-foreground mb-1">Pages</div>
                             <div className="text-lg font-bold">{totalPages}</div>
                         </div>
                         {/* Sessions */}
-                        <div className="bg-background border border-border p-2 hover:bg-white/10 transition-colors">
+                        <div className="bg-background border border-border p-2 hover:bg-foreground/5 dark:hover:bg-white/10 transition-colors">
                             <div className="text-xs uppercase text-muted-foreground mb-1">Sessions</div>
                             <div className="text-lg font-bold">{totalSessions}</div>
                         </div>
                         {/* Streak */}
-                        <div className="bg-background border border-border p-2 hover:bg-white/10 transition-colors">
+                        <div className="bg-background border border-border p-2 hover:bg-foreground/5 dark:hover:bg-white/10 transition-colors">
                             <div className="text-xs uppercase text-muted-foreground mb-1">Streak</div>
                             <div className="text-lg font-bold">{streak}<span className="text-sm font-normal text-muted-foreground ml-1">d</span></div>
                         </div>
                         {/* Weekly Activity Chart */}
-                        <div className="col-span-2 md:col-span-3 lg:col-span-2 bg-background border border-border p-3 hover:bg-white/5 transition-colors">
+                        <div className="col-span-2 md:col-span-3 lg:col-span-2 bg-background border border-border p-3 hover:bg-foreground/5 dark:hover:bg-white/5 transition-colors">
                             <div className="text-xs uppercase text-muted-foreground mb-3 tracking-wider">Weekly Activity</div>
                             <WeeklyBarChart data={weeklyData} />
                         </div>
@@ -260,7 +260,7 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
                     {/* Footer */}
                     <footer className="shrink-0 px-8 py-6 flex items-end justify-between">
                         <div className="flex items-center gap-8">
-                            <div className="text-[10px] uppercase tracking-[0.15em] text-white/30">
+                            <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
                                 Project by
                             </div>
                             <a
@@ -276,13 +276,13 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
                         <div className="flex items-center gap-12">
                             <button
                                 onClick={onShowStats}
-                                className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-colors"
+                                className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 <span>View Full Analytics</span>
                                 <HugeiconsIcon icon={ArrowRight01Icon} size={12} className="group-hover:translate-x-1 transition-transform" />
                             </button>
 
-                            <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.15em] text-white/30">
+                            <div className="flex items-center gap-4 text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
                                 <span>Local Storage</span>
                                 <span>•</span>
                                 <span>Privacy First</span>
@@ -292,10 +292,10 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
                 </div>
 
                 {/* Corner Accents */}
-                <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-white/10" />
-                <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-white/10" />
-                <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-white/10" />
-                <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-white/10" />
+                <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-foreground/10 dark:border-white/10" />
+                <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-foreground/10 dark:border-white/10" />
+                <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-foreground/10 dark:border-white/10" />
+                <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-foreground/10 dark:border-white/10" />
             </div>
         );
     }
