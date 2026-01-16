@@ -14,7 +14,19 @@ import {
     CheckmarkCircle02Icon,
     Brain01Icon,
     GridViewIcon,
+    CommandIcon,
+    MoreVerticalIcon,
 } from "@hugeicons/core-free-icons";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+} from "@/components/ui/dropdown-menu";
+import type { PagesPerView } from "@/components/pdf-viewer";
 
 interface ReaderViewProps {
     onMenuClick?: () => void;
@@ -37,10 +49,8 @@ export function ReaderView({ onMenuClick }: ReaderViewProps) {
     } = usePdf();
 
     const [copyState, setCopyState] = useState<"idle" | "copying" | "copied">("idle");
-    const [copyType, setCopyType] = useState<"page" | "document">("page");
 
     const handleCopy = async (type: "page" | "document") => {
-        setCopyType(type);
         setCopyState("copying");
         try {
             if (type === "page") {
@@ -59,14 +69,20 @@ export function ReaderView({ onMenuClick }: ReaderViewProps) {
     if (!currentPdf || !currentDocument) {
         return (
             <div className="flex-1 flex items-center justify-center bg-background">
-                <div className="text-center space-y-4">
-                    <div className="w-20 h-20 mx-auto rounded-3xl bg-secondary/50 flex items-center justify-center">
-                        <HugeiconsIcon icon={FileScriptIcon} size={40} strokeWidth={1.5} className="text-muted-foreground" />
+                <div className="text-center space-y-6">
+                    {/* Editorial empty state */}
+                    <div className="space-y-2">
+                        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                            [DOCUMENT VIEWER]
+                        </span>
+                        <h2 className="text-3xl font-semibold text-foreground tracking-tight">
+                            No document open
+                        </h2>
+                        <p className="text-sm text-muted-foreground max-w-[280px] mx-auto">
+                            Select a document from the library to begin reading
+                        </p>
                     </div>
-                    <div>
-                        <h2 className="text-xl font-semibold text-foreground">No document open</h2>
-                        <p className="text-sm text-muted-foreground mt-1">Select a document from the library to start reading</p>
-                    </div>
+                    <div className="w-16 h-px bg-border mx-auto" />
                 </div>
             </div>
         );
@@ -74,37 +90,42 @@ export function ReaderView({ onMenuClick }: ReaderViewProps) {
 
     return (
         <div className="flex-1 flex flex-col bg-background min-h-0">
-            {/* Header */}
-            <header className="shrink-0 h-16 border-b border-border bg-background/80 backdrop-blur-md flex items-center justify-between px-4 gap-4">
+            {/* Header - Editorial style */}
+            <header className="shrink-0 h-14 border-b border-border bg-background flex items-center justify-between px-4 gap-4">
                 {/* Left: Menu & Title */}
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex items-center gap-4 min-w-0">
                     <button
                         onClick={onMenuClick}
-                        className="lg:hidden w-10 h-10 rounded-xl flex items-center justify-center hover:bg-secondary transition-colors"
+                        className="lg:hidden w-8 h-8 flex items-center justify-center hover:bg-secondary transition-colors"
                         aria-label="Open menu"
                     >
-                        <HugeiconsIcon icon={Menu01Icon} size={20} strokeWidth={2} className="text-foreground" />
+                        <HugeiconsIcon icon={Menu01Icon} size={18} strokeWidth={1.5} className="text-foreground" />
                     </button>
+
                     <div className="min-w-0">
-                        <h1 className="font-semibold text-foreground truncate">{currentDocument.name}</h1>
-                        <p className="text-xs text-muted-foreground">
-                            Page {currentPage} of {totalPages}
-                        </p>
+                        <div className="flex items-center gap-3">
+                            <h1 className="font-medium text-foreground truncate text-sm">
+                                {currentDocument.name}
+                            </h1>
+                            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
+                                PDF
+                            </span>
+                        </div>
                     </div>
                 </div>
 
                 {/* Center: Navigation */}
-                <div className="flex items-center gap-2 bg-secondary/50 rounded-2xl p-1.5 border border-border">
+                <div className="flex items-center gap-1 border border-border px-1 py-1">
                     <button
                         onClick={prevPage}
                         disabled={currentPage <= 1}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-background disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        className="w-7 h-7 flex items-center justify-center hover:bg-secondary disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
                         aria-label="Previous page"
                     >
-                        <HugeiconsIcon icon={ArrowLeft01Icon} size={18} strokeWidth={2} className="text-foreground" />
+                        <HugeiconsIcon icon={ArrowLeft01Icon} size={14} strokeWidth={2} className="text-foreground" />
                     </button>
 
-                    <div className="flex items-center gap-1 px-2">
+                    <div className="flex items-center gap-1.5 px-2">
                         <input
                             type="number"
                             min={1}
@@ -114,114 +135,119 @@ export function ReaderView({ onMenuClick }: ReaderViewProps) {
                                 const val = parseInt(e.target.value);
                                 if (!isNaN(val)) goToPage(val);
                             }}
-                            className="w-12 h-8 text-center text-sm font-medium bg-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            className="w-10 h-6 text-center text-xs font-mono bg-secondary border-0 focus:outline-none focus:ring-1 focus:ring-ring"
                         />
-                        <span className="text-sm text-muted-foreground">/ {totalPages}</span>
+                        <span className="text-xs text-muted-foreground font-mono">/</span>
+                        <span className="text-xs text-muted-foreground font-mono">{totalPages}</span>
                     </div>
 
                     <button
                         onClick={nextPage}
                         disabled={currentPage >= totalPages}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-background disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        className="w-7 h-7 flex items-center justify-center hover:bg-secondary disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
                         aria-label="Next page"
                     >
-                        <HugeiconsIcon icon={ArrowRight01Icon} size={18} strokeWidth={2} className="text-foreground" />
+                        <HugeiconsIcon icon={ArrowRight01Icon} size={14} strokeWidth={2} className="text-foreground" />
                     </button>
                 </div>
 
                 {/* Right: Actions */}
                 <div className="flex items-center gap-2">
                     {/* Copy Markdown Dropdown */}
-                    <div className="relative group">
-                        <button
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
                             className={`
-                flex items-center gap-2 px-4 h-10 rounded-xl border transition-all
-                ${copyState === "copied"
-                                    ? "bg-green-500/10 border-green-500/30 text-green-600"
-                                    : "bg-secondary/50 border-border hover:bg-secondary text-foreground"
+                                flex items-center gap-2 px-3 h-8 border transition-all text-xs font-medium
+                                ${copyState === "copied"
+                                    ? "bg-foreground text-background border-foreground"
+                                    : "border-border hover:bg-secondary text-foreground"
                                 }
-              `}
-                            onClick={() => handleCopy("page")}
+                            `}
                             disabled={copyState === "copying"}
                         >
                             {copyState === "copied" ? (
                                 <>
-                                    <HugeiconsIcon icon={CheckmarkCircle02Icon} size={16} strokeWidth={2} />
-                                    <span className="text-sm font-medium">Copied!</span>
+                                    <HugeiconsIcon icon={CheckmarkCircle02Icon} size={14} strokeWidth={2} />
+                                    <span>Copied</span>
                                 </>
                             ) : copyState === "copying" ? (
                                 <>
-                                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                                    <span className="text-sm font-medium">Copying...</span>
+                                    <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
+                                    <span>Copying</span>
                                 </>
                             ) : (
                                 <>
-                                    <HugeiconsIcon icon={Brain01Icon} size={16} strokeWidth={2} />
-                                    <span className="text-sm font-medium hidden sm:inline">Copy Page</span>
+                                    <HugeiconsIcon icon={CommandIcon} size={14} strokeWidth={2} />
+                                    <span className="hidden sm:inline">Export MD</span>
                                 </>
                             )}
-                        </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" sideOffset={8}>
+                            <div className="px-3 py-2 text-xs text-muted-foreground font-mono uppercase tracking-wider">Export</div>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => handleCopy("page")}>
+                                <HugeiconsIcon icon={Copy01Icon} size={14} strokeWidth={2} />
+                                Current Page
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleCopy("document")}>
+                                <HugeiconsIcon icon={FileScriptIcon} size={14} strokeWidth={2} />
+                                Entire Document
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
 
-                        {/* Dropdown */}
-                        <div className="
-              absolute top-full right-0 mt-2 w-48 py-2
-              bg-popover border border-border rounded-xl shadow-xl
-              opacity-0 invisible group-hover:opacity-100 group-hover:visible
-              transition-all duration-200 z-50
-            ">
-                            <button
-                                onClick={() => handleCopy("page")}
-                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors"
-                            >
-                                <HugeiconsIcon icon={Copy01Icon} size={16} strokeWidth={2} />
-                                Copy Current Page
-                            </button>
-                            <button
-                                onClick={() => handleCopy("document")}
-                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors"
-                            >
-                                <HugeiconsIcon icon={FileScriptIcon} size={16} strokeWidth={2} />
-                                Copy Entire Document
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Page Layout Selector */}
-                    <div className="relative group">
-                        <button
-                            className="flex items-center gap-2 px-3 h-10 rounded-xl border bg-secondary/50 border-border hover:bg-secondary text-foreground transition-all"
+                    {/* Page Layout Dropdown */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            className="flex items-center gap-2 px-3 h-8 border border-border hover:bg-secondary text-foreground transition-all text-xs font-medium"
                             aria-label="Page layout"
                         >
-                            <HugeiconsIcon icon={GridViewIcon} size={16} strokeWidth={2} />
-                            <span className="text-sm font-medium hidden sm:inline">{pagesPerView} Page{pagesPerView > 1 ? 's' : ''}</span>
-                        </button>
+                            <HugeiconsIcon icon={GridViewIcon} size={14} strokeWidth={2} />
+                            <span className="hidden sm:inline font-mono">{pagesPerView}×</span>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" sideOffset={8}>
+                            <div className="px-3 py-2 text-xs text-muted-foreground font-mono uppercase tracking-wider">Layout</div>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuRadioGroup
+                                value={String(pagesPerView)}
+                                onValueChange={(v) => setPagesPerView(Number(v) as PagesPerView)}
+                            >
+                                <DropdownMenuRadioItem value="1">
+                                    Single Page
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="2">
+                                    Two Pages
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="4">
+                                    Four Pages
+                                </DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
 
-                        {/* Dropdown */}
-                        <div className="
-                            absolute top-full right-0 mt-2 w-36 py-2
-                            bg-popover border border-border rounded-xl shadow-xl
-                            opacity-0 invisible group-hover:opacity-100 group-hover:visible
-                            transition-all duration-200 z-50
-                        ">
-                            {([1, 2, 4] as const).map((count) => (
-                                <button
-                                    key={count}
-                                    onClick={() => setPagesPerView(count)}
-                                    className={`
-                                        w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors
-                                        ${pagesPerView === count
-                                            ? 'bg-primary/10 text-primary font-medium'
-                                            : 'text-foreground hover:bg-secondary'
-                                        }
-                                    `}
-                                >
-                                    {count} Page{count > 1 ? 's' : ''}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <ThemeToggle />
+                    {/* More menu with theme */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            className="w-8 h-8 flex items-center justify-center border border-border hover:bg-secondary transition-colors"
+                            aria-label="More options"
+                        >
+                            <HugeiconsIcon icon={MoreVerticalIcon} size={14} strokeWidth={2} />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" sideOffset={8}>
+                            <div className="px-3 py-2 text-xs text-muted-foreground font-mono uppercase tracking-wider">Theme</div>
+                            <DropdownMenuSeparator />
+                            <div className="px-2 py-2">
+                                <ThemeToggle />
+                            </div>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                variant="destructive"
+                                onClick={closeDocument}
+                            >
+                                Close Document
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </header>
 

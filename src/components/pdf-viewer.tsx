@@ -190,32 +190,32 @@ export function PdfViewer({ pdf, currentPage, pagesPerView = 1, onPageChange }: 
     const progressPercent = pdf.numPages > 0 ? (visiblePage / pdf.numPages) * 100 : 0;
 
     return (
-        <div className="relative flex-1 flex flex-col overflow-hidden bg-muted/30">
-            {/* Progress bar */}
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-secondary/30 z-20">
+        <div className="relative flex-1 flex flex-col overflow-hidden bg-muted/20">
+            {/* Progress bar - thin line at top */}
+            <div className="absolute top-0 left-0 right-0 h-px bg-border z-20">
                 <div
-                    className="h-full bg-primary/80 transition-all duration-300 ease-out"
+                    className="h-full bg-foreground transition-all duration-300 ease-out"
                     style={{ width: `${progressPercent}%` }}
                 />
             </div>
 
             {/* Controls */}
-            <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between pointer-events-none">
+            <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between pointer-events-none">
                 {/* Zoom Controls */}
-                <div className="inline-flex items-center gap-1.5 rounded-xl bg-background/90 backdrop-blur-md border border-border/50 px-3 py-2 shadow-lg pointer-events-auto">
+                <div className="inline-flex items-center border border-border bg-background/95 backdrop-blur-sm pointer-events-auto">
                     <button
                         onClick={() => setScale((s) => Math.max(s - 0.25, 0.5))}
-                        className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-secondary/80 transition-colors text-foreground text-sm font-medium"
+                        className="w-7 h-7 flex items-center justify-center hover:bg-secondary transition-colors text-foreground text-xs font-medium border-r border-border"
                         aria-label="Zoom out"
                     >
                         −
                     </button>
-                    <span className="text-xs font-medium text-muted-foreground min-w-[3.5rem] text-center">
+                    <span className="text-[10px] font-mono text-muted-foreground min-w-[3rem] text-center px-2">
                         {Math.round(scale * 100)}%
                     </span>
                     <button
                         onClick={() => setScale((s) => Math.min(s + 0.25, 3))}
-                        className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-secondary/80 transition-colors text-foreground text-sm font-medium"
+                        className="w-7 h-7 flex items-center justify-center hover:bg-secondary transition-colors text-foreground text-xs font-medium border-l border-border"
                         aria-label="Zoom in"
                     >
                         +
@@ -223,9 +223,10 @@ export function PdfViewer({ pdf, currentPage, pagesPerView = 1, onPageChange }: 
                 </div>
 
                 {/* Page indicator */}
-                <div className="inline-flex items-center gap-2 rounded-xl bg-background/90 backdrop-blur-md border border-border/50 px-3 py-2 shadow-lg pointer-events-auto">
-                    <span className="text-xs font-semibold text-foreground">{visiblePage}</span>
-                    <span className="text-xs text-muted-foreground">/ {pdf.numPages}</span>
+                <div className="inline-flex items-center gap-1.5 border border-border bg-background/95 backdrop-blur-sm px-2.5 py-1.5 pointer-events-auto">
+                    <span className="text-[10px] font-mono text-foreground">{visiblePage}</span>
+                    <span className="text-[10px] font-mono text-muted-foreground">/</span>
+                    <span className="text-[10px] font-mono text-muted-foreground">{pdf.numPages}</span>
                 </div>
             </div>
 
@@ -248,21 +249,21 @@ export function PdfViewer({ pdf, currentPage, pagesPerView = 1, onPageChange }: 
                             }}
                             data-page={pageNum}
                             className={`
-                                relative rounded-lg overflow-hidden shadow-xl
-                                ring-1 ring-black/5 dark:ring-white/5
+                                relative overflow-hidden
+                                ring-1 ring-border
                                 ${isDark ? "invert hue-rotate-180" : ""}
                             `}
                             style={{
-                                background: isDark ? "#1a1a2e" : "#ffffff",
+                                background: isDark ? "#141414" : "#ffffff",
                                 minHeight: "200px",
                             }}
                         >
                             {/* Page number */}
                             <div className={`
-                                absolute top-3 right-3 z-10 px-2 py-1 rounded-md text-[10px] font-medium
+                                absolute top-2 right-2 z-10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider
                                 ${isDark
                                     ? "bg-white/10 text-white invert hue-rotate-180"
-                                    : "bg-black/5 text-black/60"
+                                    : "bg-black/5 text-black/50"
                                 }
                             `}>
                                 {pageNum}
@@ -282,8 +283,8 @@ export function PdfViewer({ pdf, currentPage, pagesPerView = 1, onPageChange }: 
 
                             {/* Loading placeholder */}
                             {!renderedPages.has(pageNum) && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-secondary/20">
-                                    <div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-muted-foreground rounded-full animate-spin" />
+                                <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+                                    <div className="w-4 h-4 border border-foreground/20 border-t-foreground/60 rounded-full animate-spin" />
                                 </div>
                             )}
                         </div>
