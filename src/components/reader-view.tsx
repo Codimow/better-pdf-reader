@@ -227,87 +227,97 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
                         </div>
                     </header>
 
-                    {/* Expanded Grid Layout */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 p-4 max-w-[1600px] mx-auto w-full">
-                        {/* Intro Card - Larger */}
-                        <div className="col-span-2 md:col-span-2 lg:col-span-2 row-span-2 bg-background border border-border p-6 hover:bg-foreground/5 dark:hover:bg-white/10 transition-colors flex flex-col justify-between group">
-                            <div>
-                                <h1 className="text-3xl font-bold tracking-tighter mb-4">Better PDF<br />Reader</h1>
-                                <p className="text-sm text-muted-foreground leading-relaxed">
-                                    Minimal reading environment.<br />
-                                    Intelligent analytics.<br />
-                                    No distractions.
-                                </p>
-                            </div>
-                            <div className="flex gap-4">
-                                <a
-                                    href="https://github.com/kiritocode1/better-pdf-reader"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="p-2 bg-foreground/5 hover:bg-foreground/10 transition-colors rounded-full"
-                                    title="View on GitHub"
-                                >
-                                    <HugeiconsIcon icon={Github01Icon} size={20} />
-                                </a>
-                                <button
-                                    onClick={() => {
-                                        const text = "Check out Better PDF Reader by @kiritocode1";
-                                        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
-                                    }}
-                                    className="p-2 bg-foreground/5 hover:bg-foreground/10 transition-colors rounded-full"
-                                    title="Share on X"
-                                >
-                                    <HugeiconsIcon icon={NewTwitterIcon} size={20} />
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
-                                    }}
-                                    className="p-2 bg-foreground/5 hover:bg-foreground/10 transition-colors rounded-full"
-                                    title="Share on LinkedIn"
-                                >
-                                    <HugeiconsIcon icon={Linkedin02Icon} size={20} />
-                                </button>
-                            </div>
-                        </div>
-                        {/* Total Time - Taller */}
-                        <div className="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 bg-background border border-border p-4 hover:bg-foreground/5 dark:hover:bg-white/10 transition-colors flex flex-col justify-between">
-                            <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Total Time</div>
-                            <div className="text-2xl font-bold tracking-tight">{formatLifetimeTime(totalTime)}</div>
-                        </div>
-                        {/* Pages Read - Taller */}
-                        <div className="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 bg-background border border-border p-4 hover:bg-foreground/5 dark:hover:bg-white/10 transition-colors flex flex-col justify-between">
-                            <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Pages</div>
-                            <div className="text-2xl font-bold tracking-tight">{totalPages}</div>
-                        </div>
-                        {/* Sessions */}
-                        <div className="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 bg-background border border-border p-4 hover:bg-foreground/5 dark:hover:bg-white/10 transition-colors flex flex-col justify-between">
-                            <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Sessions</div>
-                            <div className="text-2xl font-bold tracking-tight">{totalSessions}</div>
-                        </div>
-                        {/* Streak */}
-                        <div className="col-span-1 md:col-span-1 lg:col-span-1 row-span-1 bg-background border border-border p-4 hover:bg-foreground/5 dark:hover:bg-white/10 transition-colors flex flex-col justify-between">
-                            <div className="text-xs uppercase text-muted-foreground tracking-wider mb-1">Streak</div>
-                            <div className="text-2xl font-bold tracking-tight">{streak}<span className="text-sm font-normal text-muted-foreground ml-1">days</span></div>
-                        </div>
-                        {/* Weekly Activity Chart - Wider */}
-                        <div className="col-span-2 md:col-span-2 lg:col-span-2 row-span-2 bg-background border border-border p-4 hover:bg-foreground/5 dark:hover:bg-white/5 transition-colors flex flex-col">
-                            <div className="text-xs uppercase text-muted-foreground mb-4 tracking-wider">Weekly Activity</div>
-                            <div className="flex-1 flex items-end">
-                                <WeeklyBarChart data={weeklyData} className="w-full" />
-                            </div>
-                        </div>
+                    {/* Boxy Bento Grid Container */}
+                    <div className="flex-1 p-4 md:p-8 flex flex-col items-center justify-center">
+                        <div className="w-full max-w-[1400px] border border-border bg-border gap-px grid grid-cols-1 md:grid-cols-12 overflow-hidden shadow-2xl">
 
-                        {/* Poetic Image Card - Large */}
-                        <div className="col-span-2 md:col-span-4 lg:col-span-4 row-span-2 bg-background border border-border p-0 overflow-hidden relative group">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                src="/pixelated.png"
-                                alt="Poetic visuals"
-                                className="w-full h-full object-cover grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700"
-                            />
-                            <div className="absolute bottom-4 left-4 text-xs uppercase tracking-[0.2em] text-white/60 mix-blend-difference">
-                                The Poetics of Space
+                            {/* Intro Section - 4 Cols */}
+                            <div className="col-span-1 md:col-span-12 lg:col-span-4 bg-background p-8 flex flex-col justify-between min-h-[300px]">
+                                <div>
+                                    <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6 leading-tight">
+                                        Better PDF<br />Reader
+                                    </h1>
+                                    <div className="space-y-2 text-sm text-muted-foreground font-mono">
+                                        <p>Minimal reading environment.</p>
+                                        <p>Intelligent analytics.</p>
+                                        <p>No distractions.</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-3 mt-8">
+                                    <a
+                                        href="https://github.com/kiritocode1/better-pdf-reader"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="h-14 w-14 bg-red-600 hover:bg-red-700 text-white flex items-center justify-center transition-colors hover:scale-105 active:scale-95"
+                                        title="GitHub"
+                                    >
+                                        <HugeiconsIcon icon={Github01Icon} size={24} />
+                                    </a>
+                                    <button
+                                        onClick={() => {
+                                            const text = "Check out Better PDF Reader by @kiritocode1";
+                                            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+                                        }}
+                                        className="h-14 w-14 bg-red-600 hover:bg-red-700 text-white flex items-center justify-center transition-colors hover:scale-105 active:scale-95"
+                                        title="Share on X"
+                                    >
+                                        <HugeiconsIcon icon={NewTwitterIcon} size={24} />
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+                                        }}
+                                        className="h-14 w-14 bg-red-600 hover:bg-red-700 text-white flex items-center justify-center transition-colors hover:scale-105 active:scale-95"
+                                        title="Share on LinkedIn"
+                                    >
+                                        <HugeiconsIcon icon={Linkedin02Icon} size={24} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Right Side - 8 Cols */}
+                            <div className="col-span-1 md:col-span-12 lg:col-span-8 grid grid-rows-[auto_1fr]">
+                                {/* Top Row - Stats - Grid of 4 */}
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border">
+                                    <div className="bg-background p-6 flex flex-col justify-between aspect-[4/3]">
+                                        <div className="text-[10px] uppercase text-muted-foreground tracking-widest font-mono">Total Time</div>
+                                        <div className="text-2xl font-bold tracking-tight">{formatLifetimeTime(totalTime)}</div>
+                                    </div>
+                                    <div className="bg-background p-6 flex flex-col justify-between aspect-[4/3]">
+                                        <div className="text-[10px] uppercase text-muted-foreground tracking-widest font-mono">Pages</div>
+                                        <div className="text-2xl font-bold tracking-tight">{totalPages}</div>
+                                    </div>
+                                    <div className="bg-background p-6 flex flex-col justify-between aspect-[4/3]">
+                                        <div className="text-[10px] uppercase text-muted-foreground tracking-widest font-mono">Sessions</div>
+                                        <div className="text-2xl font-bold tracking-tight">{totalSessions}</div>
+                                    </div>
+                                    <div className="bg-background p-6 flex flex-col justify-between aspect-[4/3]">
+                                        <div className="text-[10px] uppercase text-muted-foreground tracking-widest font-mono">Streak</div>
+                                        <div className="text-2xl font-bold tracking-tight">{streak}<span className="text-sm font-normal text-muted-foreground ml-1">d</span></div>
+                                    </div>
+                                </div>
+
+                                {/* Bottom Row - Weekly Chart */}
+                                <div className="bg-background p-6 flex flex-col gap-px border-t border-border">
+                                    <div className="text-[10px] uppercase text-muted-foreground tracking-widest mb-4 font-mono">Weekly Activity</div>
+                                    <div className="flex-1 flex items-end min-h-[120px]">
+                                        <WeeklyBarChart data={weeklyData} className="w-full" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Full Width Bottom Image */}
+                            <div className="col-span-1 md:col-span-12 relative h-[320px] bg-background border-t border-border group overflow-hidden">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                    src="/pixelated.png"
+                                    alt="The Poetics of Space"
+                                    className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700 ease-in-out"
+                                />
+                                <div className="absolute bottom-6 left-6 text-xs uppercase tracking-[0.3em] text-white/80 mix-blend-difference font-mono z-10">
+                                    The Poetics of Space
+                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                             </div>
                         </div>
                     </div>
