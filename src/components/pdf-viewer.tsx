@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
 import { useTheme } from "better-themes";
+import { motion, AnimatePresence } from "framer-motion";
 
 export type PagesPerView = 1 | 2 | 4;
 
@@ -24,6 +25,8 @@ export function PdfViewer({ pdf, currentPage, pagesPerView = 1, onPageChange }: 
     const [renderedPages, setRenderedPages] = useState<Set<number>>(new Set());
     const [visiblePage, setVisiblePage] = useState(currentPage);
     const [estimatedPageHeight, setEstimatedPageHeight] = useState(800 * 1.5);
+    const [direction, setDirection] = useState(0); // -1 for up, 1 for down
+    const previousVisiblePage = useRef(currentPage);
     const isScrollingRef = useRef(false);
     const { theme } = useTheme();
 
@@ -140,7 +143,12 @@ export function PdfViewer({ pdf, currentPage, pagesPerView = 1, onPageChange }: 
                 );
                 const pageNum = parseInt(mostVisible.target.getAttribute("data-page") || "0");
                 if (pageNum > 0) {
-                    setVisiblePage(pageNum);
+                    const diff = pageNum - previousVisiblePage.current;
+                    if (diff !== 0) {
+                        setDirection(diff > 0 ? 1 : -1);
+                        previousVisiblePage.current = pageNum;
+                        setVisiblePage(pageNum);
+                    }
                 }
             }
         }, options);
@@ -176,6 +184,13 @@ export function PdfViewer({ pdf, currentPage, pagesPerView = 1, onPageChange }: 
 
                     // "auto" = instant jump
                     pageElement.scrollIntoView({ behavior: "auto", block: "start" });
+
+                    // Update direction
+                    const diff = currentPage - visiblePage;
+                    if (diff !== 0) {
+                        setDirection(diff > 0 ? 1 : -1);
+                        previousVisiblePage.current = currentPage;
+                    }
 
                     // 3. Force update our local state to match immediately
                     setVisiblePage(currentPage);
@@ -243,8 +258,40 @@ export function PdfViewer({ pdf, currentPage, pagesPerView = 1, onPageChange }: 
                 </div>
 
                 {/* Page indicator */}
-                <div className="inline-flex items-center gap-1.5 border border-border bg-background/95 backdrop-blur-sm px-2.5 py-1.5 pointer-events-auto">
-                    <span className="text-[10px] font-mono text-foreground">{visiblePage}</span>
+                {/* Page indicator */}
+                <div className="inline-flex items-center gap-1.5 border border-border bg-background/95 backdrop-blur-sm px-2.5 py-1.5 pointer-events-auto overflow-hidden h-8 min-w-[3.5rem] justify-center">
+                    <div className="relative h-[1.2em] w-[2ch] text-center">
+                        <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+                            <motion.span
+                                key={visiblePage}
+                                custom={direction}
+                                variants={{
+                                    enter: (direction: number) => ({
+                                        y: direction > 0 ? "100%" : "-100%",
+                                        opacity: 0,
+                                        position: "absolute",
+                                    }),
+                                    center: {
+                                        y: 0,
+                                        opacity: 1,
+                                        position: "relative",
+                                    },
+                                    exit: (direction: number) => ({
+                                        y: direction > 0 ? "-100%" : "100%",
+                                        opacity: 0,
+                                        position: "absolute",
+                                    }),
+                                }}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                className="block text-[10px] font-mono text-foreground inset-0 w-full"
+                            >
+                                {visiblePage}
+                            </motion.span>
+                        </AnimatePresence>
+                    </div>
                     <span className="text-[10px] font-mono text-muted-foreground">/</span>
                     <span className="text-[10px] font-mono text-muted-foreground">{pdf.numPages}</span>
                 </div>
