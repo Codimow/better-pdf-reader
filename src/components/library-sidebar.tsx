@@ -76,27 +76,47 @@ export function LibrarySidebar({ onDocumentOpen }: LibrarySidebarProps) {
     };
 
     return (
-        <aside className="w-72 h-full border-r border-border bg-sidebar flex flex-col">
+        <aside className="w-80 h-full border-r border-sidebar-border bg-sidebar flex flex-col font-mono relative overflow-hidden text-sidebar-foreground">
+            {/* Background Grid */}
+            <div className="absolute inset-0 bg-[radial-gradient(currentColor_1px,transparent_1px)] [background-size:20px_20px] opacity-[0.03] pointer-events-none" />
+
             {/* Header */}
-            <div className="p-5 border-b border-border">
-                <div className="flex items-baseline justify-between">
-                    <h1 className="text-lg font-semibold text-foreground tracking-tight">
-                        Library
-                    </h1>
-                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-                        [{documents.length}]
-                    </span>
+            <div className="p-6 border-b border-sidebar-border z-10 bg-sidebar/80 backdrop-blur-sm">
+                <div className="flex flex-col gap-4">
+                    <div className="w-12 h-12 text-sidebar-foreground">
+                        <svg viewBox="0 0 125 125" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                            <path d="M124 1V124H1V1H124Z" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" />
+                            <path d="M62.5001 0V124.896" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" />
+                            <path d="M124.896 62.5H62.5001" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" />
+                            <path d="M93.6981 0V62.5" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" />
+                            <path d="M124.896 31.198H93.6981" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" />
+                            <path d="M109.297 0V31.198" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" />
+                            <path d="M124.896 15.599H109.297" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" />
+                            <path d="M117.097 0V15.599" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" />
+                            <path d="M124.896 7.7995H117.097" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 className="text-xl font-bold tracking-tighter leading-none mb-1">
+                            BETTER PDF<br />READER
+                        </h1>
+                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest">
+                            <span>Library</span>
+                            <span className="w-px h-2 bg-sidebar-border" />
+                            <span>{documents.length} Docs</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             {/* Upload Area */}
-            <div className="p-4">
+            <div className="p-4 z-10">
                 <div
                     className={`
-                        relative p-5 border border-dashed transition-all cursor-pointer group
+                        relative p-6 border border-dashed transition-all cursor-pointer group
                         ${dragOver
-                            ? "border-foreground bg-secondary"
-                            : "border-border hover:border-muted-foreground"
+                            ? "border-red-500 bg-red-500/10 text-red-500"
+                            : "border-sidebar-border hover:border-sidebar-foreground/40 hover:bg-sidebar-accent text-sidebar-foreground"
                         }
                     `}
                     onDrop={handleDrop}
@@ -114,47 +134,47 @@ export function LibrarySidebar({ onDocumentOpen }: LibrarySidebarProps) {
                     />
                     <div className="flex flex-col items-center gap-3 text-center">
                         <div className={`
-                            w-10 h-10 border flex items-center justify-center transition-colors
-                            ${dragOver ? "border-foreground" : "border-border group-hover:border-muted-foreground"}
+                            w-10 h-10 border border-sidebar-border flex items-center justify-center transition-colors
+                            ${dragOver ? "bg-red-500 text-white border-transparent" : "text-muted-foreground group-hover:text-sidebar-foreground"}
                         `}>
                             <HugeiconsIcon
                                 icon={Upload04Icon}
                                 size={20}
                                 strokeWidth={1.5}
-                                className={`transition-colors ${dragOver ? "text-foreground" : "text-muted-foreground"}`}
                             />
                         </div>
                         <div>
-                            <p className="text-xs font-medium text-foreground">
-                                Drop PDF here
+                            <p className="text-xs font-medium tracking-wide uppercase">
+                                Upload PDF
                             </p>
-                            <p className="text-[10px] text-muted-foreground mt-0.5 font-mono uppercase tracking-wider">
-                                or click to browse
+                            <p className="text-[9px] text-muted-foreground mt-1 uppercase tracking-wider">
+                                Drag & Drop or Click
                             </p>
                         </div>
                     </div>
+
+                    {/* Corner accents */}
+                    <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-sidebar-foreground/20 transition-colors group-hover:border-red-500" />
+                    <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-sidebar-foreground/20 transition-colors group-hover:border-red-500" />
                 </div>
             </div>
 
             {/* Document List */}
-            <div className="flex-1 overflow-auto px-4 pb-4">
-                <div className="flex items-center justify-between mb-3">
-                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.15em]">
-                        Recent
+            <div className="flex-1 overflow-auto px-4 pb-4 z-10">
+                <div className="flex items-center justify-between mb-4 mt-2">
+                    <span className="text-[9px] text-muted-foreground uppercase tracking-[0.2em] font-bold">
+                        Files_Index
                     </span>
-                    <div className="flex-1 h-px bg-border ml-3" />
+                    <div className="flex-1 h-px bg-sidebar-border ml-4" />
                 </div>
 
                 {isLoading && documents.length === 0 ? (
                     <div className="flex items-center justify-center py-12">
-                        <div className="w-4 h-4 border border-foreground border-t-transparent rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-sidebar-border border-t-red-500 rounded-full animate-spin" />
                     </div>
                 ) : documents.length === 0 ? (
-                    <div className="text-center py-12 space-y-2">
-                        <p className="text-xs text-muted-foreground">No documents</p>
-                        <p className="text-[10px] text-muted-foreground/60 font-mono">
-                            Upload a PDF to begin
-                        </p>
+                    <div className="text-center py-12 space-y-2 opacity-30 text-muted-foreground">
+                        <p className="text-xs uppercase tracking-widest">No Data</p>
                     </div>
                 ) : (
                     <div className="space-y-1">
@@ -170,10 +190,10 @@ export function LibrarySidebar({ onDocumentOpen }: LibrarySidebarProps) {
                                     <div
                                         key={doc.id}
                                         className={`
-                                            group relative p-3 cursor-pointer transition-all
+                                            group relative p-3 cursor-pointer transition-all border border-transparent
                                             ${isActive
-                                                ? "bg-secondary"
-                                                : "hover:bg-secondary/50"
+                                                ? "bg-sidebar-accent border-sidebar-border"
+                                                : "hover:bg-sidebar-accent/50 hover:border-sidebar-border/50"
                                             }
                                         `}
                                         onClick={() => {
@@ -182,70 +202,47 @@ export function LibrarySidebar({ onDocumentOpen }: LibrarySidebarProps) {
                                         }}
                                     >
                                         <div className="flex items-start gap-3">
-                                            {/* Document icon with progress ring */}
-                                            <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
-                                                <svg className="absolute inset-0 w-8 h-8 -rotate-90">
-                                                    <circle
-                                                        cx="16"
-                                                        cy="16"
-                                                        r="14"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="1"
-                                                        className="text-border"
-                                                    />
-                                                    <circle
-                                                        cx="16"
-                                                        cy="16"
-                                                        r="14"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="1.5"
-                                                        strokeDasharray={`${progress * 0.88} 88`}
-                                                        className="text-foreground transition-all duration-300"
-                                                    />
-                                                </svg>
-                                                <HugeiconsIcon
-                                                    icon={FileIcon}
-                                                    size={14}
-                                                    strokeWidth={1.5}
-                                                    className="text-foreground"
-                                                />
+                                            {/* Minimalist Progress Icon */}
+                                            <div className="relative w-8 h-8 flex items-center justify-center shrink-0 border border-sidebar-border bg-sidebar">
+                                                {isActive && (
+                                                    <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-red-500" />
+                                                )}
+                                                <span className="text-[9px] font-bold text-muted-foreground">{progress}%</span>
                                             </div>
 
                                             <div className="flex-1 min-w-0 space-y-1">
-                                                <p className="text-xs font-medium text-foreground truncate leading-tight">
+                                                <p className={`text-xs truncate leading-tight transition-colors ${isActive ? "text-sidebar-foreground font-medium" : "text-muted-foreground group-hover:text-sidebar-foreground"}`}>
                                                     {doc.name}
                                                 </p>
-                                                <div className="flex items-center gap-2 font-mono text-[9px] text-muted-foreground uppercase tracking-wider">
-                                                    <span>{doc.totalPages}p</span>
-                                                    <span className="opacity-40">·</span>
+                                                <div className="flex items-center gap-2 text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+                                                    <span>{doc.totalPages} PG</span>
+                                                    <span className="w-px h-2 bg-sidebar-border" />
                                                     <span>{formatDate(new Date(doc.lastOpenedAt))}</span>
                                                 </div>
                                             </div>
 
-                                            {/* More options dropdown */}
+                                            {/* Actions */}
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger
                                                     className={`
                                                         w-6 h-6 flex items-center justify-center
                                                         opacity-0 group-hover:opacity-100 transition-opacity
-                                                        hover:bg-background
+                                                        text-muted-foreground hover:text-sidebar-foreground
                                                     `}
                                                     onClick={(e) => e.stopPropagation()}
                                                 >
-                                                    <HugeiconsIcon icon={MoreHorizontalIcon} size={12} strokeWidth={2} />
+                                                    <HugeiconsIcon icon={MoreHorizontalIcon} size={14} />
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end" sideOffset={4}>
+                                                <DropdownMenuContent align="end" className="bg-popover border-border text-popover-foreground font-mono">
                                                     <DropdownMenuItem
-                                                        variant="destructive"
+                                                        className="focus:bg-red-500 focus:text-white text-red-500 text-xs uppercase tracking-wide"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             deleteDocument(doc.id);
                                                         }}
                                                     >
-                                                        <HugeiconsIcon icon={Delete02Icon} size={14} strokeWidth={2} />
-                                                        Delete
+                                                        <HugeiconsIcon icon={Delete02Icon} size={14} className="mr-2" />
+                                                        Delete_File
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -258,10 +255,15 @@ export function LibrarySidebar({ onDocumentOpen }: LibrarySidebarProps) {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-border">
-                <p className="font-mono text-[9px] text-muted-foreground/50 uppercase tracking-[0.15em] text-center">
-                    Better PDF Reader
-                </p>
+            <div className="p-4 border-t border-sidebar-border z-10 bg-sidebar">
+                <a
+                    href="https://aryank.space"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block font-mono text-[9px] text-muted-foreground hover:text-red-500 uppercase tracking-[0.15em] text-center transition-colors"
+                >
+                    Better PDF Reader by BLANK
+                </a>
             </div>
         </aside>
     );

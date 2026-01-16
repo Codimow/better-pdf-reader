@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Better PDF",
-  description: "Better PDF reader",
+  title: "BETTER PDF READER",
+  description: "BETTER PDF READER by BLANK",
 };
 
 import { ClientProvider } from "@/components/providers/client-provider";
