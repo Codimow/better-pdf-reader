@@ -140,27 +140,34 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
                 >
                     {/* Main Container - The "Puck" */}
                     <motion.div
-                        className={cn(
-                            "relative bg-black rounded-[40px] shadow-2xl border border-white/10 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group",
-                            isHovered
-                                ? "w-[320px] h-[180px] rounded-[24px]" // Expanded rectangular dashboard
-                                : "w-[120px] h-[120px] rounded-full"   // Collapsed circular dial
-                        )}
+                        layout
+                        animate={{
+                            width: isHovered ? 320 : 120,
+                            height: isHovered ? 180 : 120,
+                            borderRadius: isHovered ? 24 : 60
+                        }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30
+                        }}
+                        className="relative bg-black shadow-2xl border border-white/10 overflow-hidden group"
                     >
                         {/* --------------------------------------------------------------------------------
                             COLLAPSED STATE: The Mechanical Dial
                            -------------------------------------------------------------------------------- */}
-                        <div className={cn(
-                            "absolute inset-0 flex items-center justify-center transition-opacity duration-300",
-                            isHovered ? "opacity-0 pointer-events-none" : "opacity-100"
-                        )}>
+                        <motion.div
+                            className="absolute inset-0 flex items-center justify-center"
+                            animate={{ opacity: isHovered ? 0 : 1 }}
+                            transition={{ duration: 0.2 }}
+                        >
                             {/* Draggable surface */}
                             <div className="absolute inset-0 z-20 cursor-grab active:cursor-grabbing" onPointerDown={(e) => controls.start(e)} />
 
-                            {/* Outer Static Ring (Minutes ticks) */}
+                            {/* Outer Static Ring */}
                             <div className="absolute inset-2 rounded-full border border-dashed border-white/10" />
 
-                            {/* Inner Moving Ring (Seconds) - Mechanical Rotation */}
+                            {/* Inner Moving Ring */}
                             <motion.div
                                 className="absolute inset-1 rounded-full border-t-2 border-r-2 border-transparent border-t-red-500 border-r-red-500/50"
                                 style={{ rotate: secondsRotation, transition: "rotate 1s linear" }}
@@ -168,111 +175,106 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
 
                             {/* Inner Content */}
                             <div className="flex flex-col items-center justify-center z-10 space-y-0.5">
-                                {/* Red Pulse Dot */}
                                 <div className={cn(
                                     "w-1.5 h-1.5 rounded-full mb-1",
                                     isPaused ? "bg-white/20" : "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"
                                 )} />
-
-                                {/* Time Display */}
                                 <div className="font-mono text-xl font-bold tracking-tight leading-none text-white">
                                     {timeObj.m}:{timeObj.s}
                                 </div>
-
-                                {/* HRS indicator (if applicable) or small label */}
                                 {timeObj.h && (
                                     <div className="text-[9px] font-mono text-white/40 tracking-widest">{timeObj.h} HR</div>
                                 )}
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* --------------------------------------------------------------------------------
                             EXPANDED STATE: The "Nothing" Dashboard
                            -------------------------------------------------------------------------------- */}
-                        <div className={cn(
-                            "absolute inset-0 p-5 flex flex-col transition-all duration-500 delay-75",
-                            isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
-                        )}>
-                            {/* Background Texture: Dot Grid */}
-                            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent bg-[length:4px_4px]" />
+                        <motion.div
+                            className="absolute inset-0 p-5 flex flex-col"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: isHovered ? 1 : 0 }}
+                            transition={{ duration: 0.3, delay: isHovered ? 0.1 : 0 }}
+                        >
+                            {/* Texture overlay (only visible when expanded) */}
+                            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent bg-[length:4px_4px] pointer-events-none" />
                             <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
 
-                            {/* Top Bar: Label & Drag */}
-                            <div className="flex justify-between items-center mb-4 z-20">
-                                <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing" onPointerDown={(e) => controls.start(e)}>
-                                    <div className={cn("w-2 h-2 rounded-full", isPaused ? "bg-white/20" : "bg-red-500")} />
-                                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/50">
-                                        Session_01
-                                    </span>
-                                </div>
-                                <div className="flex gap-2">
-                                    <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
-                                        <HugeiconsIcon icon={ViewOffSlashIcon} size={14} />
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Metric Grid - The "Data" look */}
-                            <div className="grid grid-cols-[1.5fr_1fr] flex-1 gap-4 z-20">
-                                {/* Time & Waveform */}
-                                <div className="flex flex-col justify-between border-r border-white/10 pr-4">
-                                    <div className="font-mono text-3xl font-light tracking-tighter text-white">
-                                        {timeObj.h && <span className="text-white/40 text-lg align-top mr-0.5">{timeObj.h}:</span>}
-                                        {timeObj.m}:{timeObj.s}
+                            <div className={cn("flex-1 flex flex-col", !isHovered && "pointer-events-none")}>
+                                {/* Top Bar */}
+                                <div className="flex justify-between items-center mb-4 z-20">
+                                    <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing" onPointerDown={(e) => controls.start(e)}>
+                                        <div className={cn("w-2 h-2 rounded-full", isPaused ? "bg-white/20" : "bg-red-500")} />
+                                        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/50">
+                                            Session_01
+                                        </span>
                                     </div>
-
-                                    {/* Waveform Bars - Nothing Style: Pixels */}
-                                    <div className="flex items-end gap-[2px] h-8 mt-2">
-                                        {waveformBars.map((bar, i) => (
-                                            <div
-                                                key={i}
-                                                className={cn(
-                                                    "flex-1",
-                                                    bar.type === 'data'
-                                                        ? (bar.active ? "bg-red-500" : "bg-white") // Monochrome + Red only
-                                                        : "bg-white/10"
-                                                )}
-                                                style={{ height: `${bar.height}%` }}
-                                            />
-                                        ))}
+                                    <div className="flex gap-2">
+                                        <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
+                                            <HugeiconsIcon icon={ViewOffSlashIcon} size={14} />
+                                        </button>
                                     </div>
                                 </div>
 
-                                {/* Stats & Controls */}
-                                <div className="flex flex-col justify-between pl-1">
-                                    <div className="space-y-1">
-                                        <div className="text-[9px] font-mono text-white/40 uppercase tracking-wider">Velocity</div>
-                                        <div className="text-lg font-mono text-white flex items-baseline gap-1">
-                                            {pagesPerHour}
-                                            <span className="text-[10px] text-white/40">PG/HR</span>
+                                {/* Metric Grid */}
+                                <div className="grid grid-cols-[1.5fr_1fr] flex-1 gap-4 z-20">
+                                    <div className="flex flex-col justify-between border-r border-white/10 pr-4">
+                                        <div className="font-mono text-3xl font-light tracking-tighter text-white">
+                                            {timeObj.h && <span className="text-white/40 text-lg align-top mr-0.5">{timeObj.h}:</span>}
+                                            {timeObj.m}:{timeObj.s}
+                                        </div>
+
+                                        {/* Waveform */}
+                                        <div className="flex items-end gap-[2px] h-8 mt-2">
+                                            {waveformBars.map((bar, i) => (
+                                                <div
+                                                    key={i}
+                                                    className={cn(
+                                                        "flex-1",
+                                                        bar.type === 'data'
+                                                            ? (bar.active ? "bg-red-500" : "bg-white")
+                                                            : "bg-white/10"
+                                                    )}
+                                                    style={{ height: `${bar.height}%` }}
+                                                />
+                                            ))}
                                         </div>
                                     </div>
 
-                                    {/* Control Cluster */}
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={onTogglePause}
-                                            className="w-10 h-10 border border-white/20 hover:border-red-500 hover:bg-red-500/10 rounded-full flex items-center justify-center transition-all active:scale-95 group/btn"
-                                            title={isPaused ? "Resume" : "Pause"}
-                                        >
-                                            {isPaused ? (
-                                                <HugeiconsIcon icon={PlayIcon} size={16} className="text-white group-hover/btn:text-red-500" strokeWidth={3} />
-                                            ) : (
-                                                <HugeiconsIcon icon={PauseIcon} size={16} className="text-red-500" strokeWidth={3} />
-                                            )}
-                                        </button>
-                                        <button
-                                            onClick={() => window.location.reload()}
-                                            className="w-8 h-8 rounded-full border border-white/10 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all"
-                                            title="Reset"
-                                        >
-                                            <HugeiconsIcon icon={RefreshIcon} size={14} />
-                                        </button>
+                                    <div className="flex flex-col justify-between pl-1">
+                                        <div className="space-y-1">
+                                            <div className="text-[9px] font-mono text-white/40 uppercase tracking-wider">Velocity</div>
+                                            <div className="text-lg font-mono text-white flex items-baseline gap-1">
+                                                {pagesPerHour}
+                                                <span className="text-[10px] text-white/40">PG/HR</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={onTogglePause}
+                                                className="w-10 h-10 border border-white/20 hover:border-red-500 hover:bg-red-500/10 rounded-full flex items-center justify-center transition-all active:scale-95 group/btn"
+                                                title={isPaused ? "Resume" : "Pause"}
+                                            >
+                                                {isPaused ? (
+                                                    <HugeiconsIcon icon={PlayIcon} size={16} className="text-white group-hover/btn:text-red-500" strokeWidth={3} />
+                                                ) : (
+                                                    <HugeiconsIcon icon={PauseIcon} size={16} className="text-red-500" strokeWidth={3} />
+                                                )}
+                                            </button>
+                                            <button
+                                                onClick={() => window.location.reload()}
+                                                className="w-8 h-8 rounded-full border border-white/10 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all"
+                                                title="Reset"
+                                            >
+                                                <HugeiconsIcon icon={RefreshIcon} size={14} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                        </div>
+                        </motion.div>
                     </motion.div>
 
                     {/* Mechanical Label - Floating outside */}
