@@ -151,7 +151,7 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
                             stiffness: 300,
                             damping: 30
                         }}
-                        className="relative bg-black shadow-2xl border border-white/10 overflow-hidden group"
+                        className="relative bg-popover shadow-2xl border border-border overflow-hidden group text-foreground"
                     >
                         {/* --------------------------------------------------------------------------------
                             COLLAPSED STATE: The Mechanical Dial
@@ -165,7 +165,7 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
                             <div className="absolute inset-0 z-20 cursor-grab active:cursor-grabbing" onPointerDown={(e) => controls.start(e)} />
 
                             {/* Outer Static Ring */}
-                            <div className="absolute inset-2 rounded-full border border-dashed border-white/10" />
+                            <div className="absolute inset-2 rounded-full border border-dashed border-border" />
 
                             {/* Inner Moving Ring */}
                             <motion.div
@@ -177,13 +177,13 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
                             <div className="flex flex-col items-center justify-center z-10 space-y-0.5">
                                 <div className={cn(
                                     "w-1.5 h-1.5 rounded-full mb-1",
-                                    isPaused ? "bg-white/20" : "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+                                    isPaused ? "bg-muted-foreground/30" : "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"
                                 )} />
-                                <div className="font-mono text-xl font-bold tracking-tight leading-none text-white">
+                                <div className="font-mono text-xl font-bold tracking-tight leading-none text-foreground">
                                     {timeObj.m}:{timeObj.s}
                                 </div>
                                 {timeObj.h && (
-                                    <div className="text-[9px] font-mono text-white/40 tracking-widest">{timeObj.h} HR</div>
+                                    <div className="text-[9px] font-mono text-muted-foreground tracking-widest">{timeObj.h} HR</div>
                                 )}
                             </div>
                         </motion.div>
@@ -198,20 +198,19 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
                             transition={{ duration: 0.3, delay: isHovered ? 0.1 : 0 }}
                         >
                             {/* Texture overlay (only visible when expanded) */}
-                            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent bg-[length:4px_4px] pointer-events-none" />
-                            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+                            <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(currentColor_1px,transparent_1px)] [background-size:4px_4px] pointer-events-none" />
 
                             <div className={cn("flex-1 flex flex-col", !isHovered && "pointer-events-none")}>
                                 {/* Top Bar */}
                                 <div className="flex justify-between items-center mb-4 z-20">
                                     <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing" onPointerDown={(e) => controls.start(e)}>
-                                        <div className={cn("w-2 h-2 rounded-full", isPaused ? "bg-white/20" : "bg-red-500")} />
-                                        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/50">
+                                        <div className={cn("w-2 h-2 rounded-full", isPaused ? "bg-muted-foreground/30" : "bg-red-500")} />
+                                        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
                                             Session_01
                                         </span>
                                     </div>
                                     <div className="flex gap-2">
-                                        <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
+                                        <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
                                             <HugeiconsIcon icon={ViewOffSlashIcon} size={14} />
                                         </button>
                                     </div>
@@ -219,9 +218,9 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
 
                                 {/* Metric Grid */}
                                 <div className="grid grid-cols-[1.5fr_1fr] flex-1 gap-4 z-20">
-                                    <div className="flex flex-col justify-between border-r border-white/10 pr-4">
-                                        <div className="font-mono text-3xl font-light tracking-tighter text-white">
-                                            {timeObj.h && <span className="text-white/40 text-lg align-top mr-0.5">{timeObj.h}:</span>}
+                                    <div className="flex flex-col justify-between border-r border-border pr-4">
+                                        <div className="font-mono text-3xl font-light tracking-tighter text-foreground">
+                                            {timeObj.h && <span className="text-muted-foreground text-lg align-top mr-0.5">{timeObj.h}:</span>}
                                             {timeObj.m}:{timeObj.s}
                                         </div>
 
@@ -233,8 +232,8 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
                                                     className={cn(
                                                         "flex-1",
                                                         bar.type === 'data'
-                                                            ? (bar.active ? "bg-red-500" : "bg-white")
-                                                            : "bg-white/10"
+                                                            ? (bar.active ? "bg-red-500" : "bg-foreground")
+                                                            : "bg-secondary"
                                                     )}
                                                     style={{ height: `${bar.height}%` }}
                                                 />
@@ -244,28 +243,28 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
 
                                     <div className="flex flex-col justify-between pl-1">
                                         <div className="space-y-1">
-                                            <div className="text-[9px] font-mono text-white/40 uppercase tracking-wider">Velocity</div>
-                                            <div className="text-lg font-mono text-white flex items-baseline gap-1">
+                                            <div className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider">Velocity</div>
+                                            <div className="text-lg font-mono text-foreground flex items-baseline gap-1">
                                                 {pagesPerHour}
-                                                <span className="text-[10px] text-white/40">PG/HR</span>
+                                                <span className="text-[10px] text-muted-foreground">PG/HR</span>
                                             </div>
                                         </div>
 
                                         <div className="flex items-center gap-2">
                                             <button
                                                 onClick={onTogglePause}
-                                                className="w-10 h-10 border border-white/20 hover:border-red-500 hover:bg-red-500/10 rounded-full flex items-center justify-center transition-all active:scale-95 group/btn"
+                                                className="w-10 h-10 border border-border hover:border-red-500 hover:bg-red-500/10 rounded-full flex items-center justify-center transition-all active:scale-95 group/btn bg-popover"
                                                 title={isPaused ? "Resume" : "Pause"}
                                             >
                                                 {isPaused ? (
-                                                    <HugeiconsIcon icon={PlayIcon} size={16} className="text-white group-hover/btn:text-red-500" strokeWidth={3} />
+                                                    <HugeiconsIcon icon={PlayIcon} size={16} className="text-foreground group-hover/btn:text-red-500" strokeWidth={3} />
                                                 ) : (
                                                     <HugeiconsIcon icon={PauseIcon} size={16} className="text-red-500" strokeWidth={3} />
                                                 )}
                                             </button>
                                             <button
                                                 onClick={() => window.location.reload()}
-                                                className="w-8 h-8 rounded-full border border-white/10 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all"
+                                                className="w-8 h-8 rounded-full border border-border hover:bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-all"
                                                 title="Reset"
                                             >
                                                 <HugeiconsIcon icon={RefreshIcon} size={14} />
@@ -284,12 +283,12 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -10 }}
-                                className="absolute top-1/2 right-50 bottom-50 -translate-y-1/2 flex flex-col gap-1 items-start pointer-events-none"
+                                className="absolute top-1/2 right-full mr-4 -translate-y-1/2 flex flex-row items-center gap-2 pointer-events-none"
                             >
-                                <div className="h-px w-8 bg-white/20" />
-                                <span className="text-[9px] font-mono text-white/40 uppercase writing-vertical-lr tracking-wider">
+                                <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider whitespace-nowrap">
                                     SYS.ACTV
                                 </span>
+                                <div className="h-px w-8 bg-border" />
                             </motion.div>
                         )}
                     </AnimatePresence>
