@@ -64,17 +64,27 @@ export function ReaderView({ onMenuClick, onShowStats }: ReaderViewProps) {
     }, [currentPage, isInputFocused]);
 
     const handlePageSubmit = () => {
-        const val = parseInt(pageInputValue);
-        if (!isNaN(val) && val >= 1 && val <= totalPages) {
+        let val = parseInt(pageInputValue);
+        if (isNaN(val)) {
+            val = currentPage;
+        }
+
+        // Clamp to bounds
+        if (val < 1) val = 1;
+        if (val > totalPages) val = totalPages;
+
+        if (val !== currentPage) {
             goToPage(val);
         } else {
-            // Revert to current page if invalid
-            setPageInputValue(String(currentPage));
+            // Just normalize the input display if it was weird (like "001" or "0")
+            setPageInputValue(String(val));
         }
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPageInputValue(e.target.value);
+        // Only allow digits
+        const newValue = e.target.value.replace(/[^0-9]/g, '');
+        setPageInputValue(newValue);
     };
 
     const handleCopy = async (type: "page" | "document") => {
