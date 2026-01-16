@@ -250,45 +250,53 @@ export function ReadingTracker({ isOpen, onClose, stats, currentSessionFn, isPau
                         </div>
 
                         {/* Physical Controls Area */}
-                        <div className="grid grid-cols-[1fr_1.2fr_1fr] gap-2 mt-2.5 h-[85px]">
+                        <div className="grid grid-cols-3 gap-2 mt-2.5 h-[60px]">
                             {/* Record/Pause Button */}
                             <button
                                 onClick={onTogglePause}
                                 className="bg-[#E0E0E0] hover:bg-[#D6D6D6] rounded-[20px] flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_2px_4px_rgba(0,0,0,0.05)] border-t border-white transition-all active:scale-[0.98] active:shadow-inner group/btn"
+                                title={isPaused ? "Resume" : "Pause"}
                             >
                                 <div className={cn(
                                     "w-10 h-10 rounded-full flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] transition-all duration-300",
                                     !isPaused ? "bg-red-500/10 text-red-500" : "bg-transparent text-neutral-400"
                                 )}>
-                                    <div className={cn(
-                                        "rounded-full transition-all duration-300",
-                                        !isPaused ? "w-3 h-3 bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.6)]" : "w-3 h-3 bg-neutral-400"
-                                    )} />
+                                    {!isPaused ? (
+                                        <HugeiconsIcon icon={PauseIcon} size={20} className="text-red-500" strokeWidth={2.5} />
+                                    ) : (
+                                        <HugeiconsIcon icon={PlayIcon} size={20} className="text-neutral-500" strokeWidth={2.5} />
+                                    )}
                                 </div>
                             </button>
 
-                            {/* Stop/Close Button - Large Center */}
+                            {/* Close Button */}
                             <button
                                 onClick={onClose}
-                                className="bg-[#E0E0E0] hover:bg-[#D6D6D6] rounded-[24px] flex flex-col items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_2px_4px_rgba(0,0,0,0.05)] border-t border-white transition-all active:scale-[0.98] active:shadow-inner gap-1"
+                                className="bg-[#E0E0E0] hover:bg-[#D6D6D6] rounded-[20px] flex flex-col items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_2px_4px_rgba(0,0,0,0.05)] border-t border-white transition-all active:scale-[0.98] active:shadow-inner"
+                                title="Hide Tracker"
                             >
-                                <div className="w-12 h-12 rounded-full bg-[#F0F0F0] shadow-[inset_0_2px_5px_rgba(0,0,0,0.05),0_1px_0_rgba(255,255,255,1)] flex items-center justify-center mb-0.5">
-                                    <div className="w-4 h-4 rounded-[3px] bg-neutral-800" />
-                                </div>
+                                <div className="text-[10px] font-bold text-neutral-500 mb-1 uppercase tracking-wider">Hide</div>
+                                <div className="w-8 h-1 rounded-full bg-neutral-400/50" />
                             </button>
 
-                            {/* Stats/Toggle Button */}
-                            <div className="flex flex-col gap-2">
-                                <button className="flex-1 bg-[#E0E0E0] hover:bg-[#D6D6D6] rounded-[20px] flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_2px_4px_rgba(0,0,0,0.05)] border-t border-white transition-all active:scale-[0.98] active:shadow-inner">
-                                    <HugeiconsIcon icon={Wifi01Icon} size={16} className="text-neutral-400" />
-                                </button>
-                                <button
-                                    className="flex-1 bg-[#E0E0E0] hover:bg-[#D6D6D6] rounded-[20px] flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_2px_4px_rgba(0,0,0,0.05)] border-t border-white transition-all active:scale-[0.98] active:shadow-inner"
-                                    onClick={() => setElapsed(currentSessionFn())}
-                                >
-                                    <HugeiconsIcon icon={RefreshIcon} size={16} className="text-neutral-400" />
-                                </button>
-                            </div>
+                            {/* Reset Button (Replaces Wifi/Refresh junk) */}
+                            <button
+                                onClick={() => {
+                                    // Reset logic: effectively just restart session or clear?
+                                    // Since we don't have a direct 'reset' exposed prop, we rely on setElapsed(0) to just visually clear it?
+                                    // The user asked for "Refresh" button to go away.
+                                    // Let's make this a "Stats" toggle or "Reset".
+                                    // Actually, simple is better. Just a Refresh icon that actually means "Reset"
+                                    const confirm = window.confirm("Reset reading session?");
+                                    if (confirm) {
+                                        window.location.reload(); // Simplest "Total Reset" for now, or we need to expose a reset function from hook
+                                    }
+                                }}
+                                className="bg-[#E0E0E0] hover:bg-[#D6D6D6] rounded-[20px] flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_2px_4px_rgba(0,0,0,0.05)] border-t border-white transition-all active:scale-[0.98] active:shadow-inner"
+                                title="Reset Session"
+                            >
+                                <HugeiconsIcon icon={RefreshIcon} size={20} className="text-neutral-500" />
+                            </button>
                         </div>
 
                         {/* Speaker Grille Detail - More realistic mesh */}

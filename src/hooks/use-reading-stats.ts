@@ -88,20 +88,24 @@ export function useReadingStats() {
 
         if (lastPage !== currentPage) {
             // Record history
-            setHistory(prev => {
-                const existingIndex = prev.findIndex(p => p.page === lastPage);
+            // Record history only if duration > 2000ms (2 seconds)
+            // This prevents "skipping" through pages from cluttering the stats
+            if (duration > 2000) {
+                setHistory(prev => {
+                    const existingIndex = prev.findIndex(p => p.page === lastPage);
 
-                if (existingIndex >= 0) {
-                    const newHistory = [...prev];
-                    const item = newHistory[existingIndex];
-                    if (item) {
-                        newHistory[existingIndex] = { ...item, duration: item.duration + duration };
+                    if (existingIndex >= 0) {
+                        const newHistory = [...prev];
+                        const item = newHistory[existingIndex];
+                        if (item) {
+                            newHistory[existingIndex] = { ...item, duration: item.duration + duration };
+                        }
+                        return newHistory;
                     }
-                    return newHistory;
-                }
 
-                return [...prev, { page: lastPage, duration }];
-            });
+                    return [...prev, { page: lastPage, duration }];
+                });
+            }
 
             // Update refs
             lastPageParams.current = { page: currentPage, time: now };
