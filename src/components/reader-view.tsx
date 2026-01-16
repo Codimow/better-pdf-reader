@@ -377,12 +377,12 @@ export function ReaderView({ onMenuClick, onShowStats, currentStats, dashboard }
                                     <img
                                         src="/pixelated.png"
                                         alt="Abstract visuals"
-                                        className="w-full h-full object-cover grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700 ease-in-out scale-105 group-hover:scale-100"
+                                        className="w-full h-full object-cover grayscale-0 opacity-60 group-hover:opacity-100 group-hover:grayscale transition-all duration-700 ease-in-out scale-105 group-hover:scale-100"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                                    <div className="absolute bottom-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
+                                    {/* <div className="absolute bottom-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
                                         <HugeiconsIcon icon={ArrowRight01Icon} size={24} className="text-white" />
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
